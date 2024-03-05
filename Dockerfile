@@ -14,9 +14,8 @@ RUN microdnf update \
          clamav-update-0.103.9-1.amzn2023.0.2.x86_64 \
          clamd-0.103.9-1.amzn2023.0.2.x86_64 \
          tar-2:1.34-1.amzn2023.0.4.x86_64 \
-         unzip-6.0-57.amzn2023.0.2.x86_64
-
-RUN install --directory --owner=nobody --group=nobody --mode=0755 /tmp/clamav
+         unzip-6.0-57.amzn2023.0.2.x86_64 \
+    && install --directory --owner=nobody --group=nobody --mode=0755 /tmp/clamav
 
 # Amazon AWS CLI
 RUN curl --location --fail-with-body \

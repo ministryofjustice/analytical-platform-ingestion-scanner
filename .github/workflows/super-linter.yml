@@ -1,5 +1,5 @@
 ---
-name: Dependency Review
+name: Super-Linter
 
 on:
   pull_request:
@@ -14,18 +14,21 @@ on:
 permissions: {}
 
 jobs:
-  dependency-review:
-    name: Dependency Review
+  super-linter:
+    name: Super-Linter
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      statuses: write
     steps:
       - name: Checkout
         id: checkout
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
-
-      - name: Dependency review
-        id: dependency_review
-        uses: actions/dependency-review-action@9129d7d40b8c12c1ed0f60400d00c92d437adcce # v4.1.3
         with:
-          fail-on-severity: critical
+          fetch-depth: 0
+
+      - name: Run Super-Linter
+        id: super_linter
+        uses: super-linter/super-linter/slim@e0fc164bba85f4b58c6cd17ba1dfd435d01e8a06 # v6.3.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
