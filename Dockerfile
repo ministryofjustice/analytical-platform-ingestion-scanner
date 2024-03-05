@@ -1,3 +1,5 @@
+#checkov:skip=CKV_DOCKER_2: HEALTHCHECK not required - AWS Lambda does not support HEALTHCHECK
+#checkov:skip=CKV_DOCKER_3: USER not required - A non-root user is used by AWS Lambda
 FROM public.ecr.aws/lambda/provided@sha256:35ef3ebbb1aa85d66a977b47ac5cbe4b185861e8e60d86e25fbc6f5e012e60da
 
 LABEL org.opencontainers.image.vendor="Ministry of Justice" \
@@ -15,6 +17,7 @@ RUN microdnf update \
          clamd-0.103.9-1.amzn2023.0.2.x86_64 \
          tar-2:1.34-1.amzn2023.0.4.x86_64 \
          unzip-6.0-57.amzn2023.0.2.x86_64 \
+    && microdnf clean all \
     && install --directory --owner=nobody --group=nobody --mode=0755 /tmp/clamav
 
 # Amazon AWS CLI

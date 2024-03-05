@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function definition_upload() {
-  freshclam --no-warnings --config-file=${LAMBDA_TASK_ROOT}/freshclam.conf
+  freshclam --no-warnings --config-file="${LAMBDA_TASK_ROOT}"/freshclam.conf
   tar --create --gzip --verbose --file=/tmp/clamav/clamav.tar.gz /tmp/clamav/clamav
   aws s3 cp /var/lib/clamav.tar.gz s3://"${CLAMAV_DEFINITON_BUCKET_NAME}"/clamav.tar.gz
 }
@@ -12,25 +12,24 @@ function definition_download() {
   tar --extract --gzip --verbose --file=/var/lib/clamav.tar.gz /var/lib/clamav
 }
 
-# function scan() {
-
-# }
+# function scan() {}
 
 function handler() {
   case "${MODE}" in
-  definition-upload )
+  definition-upload)
     definition_upload
     ;;
-  scan )
+  scan)
     definition_download
     scan
     ;;
-  * )
+  *)
     echo "Invalid mode: ${MODE}"
     exit 1
     ;;
   esac
 
+  # TODO: Implement proper response
   if [ $? -eq 0 ]; then
     echo "Success"
     RESPONSE="{\"statusCode\": 200, \"body\": \"Success\"}"
