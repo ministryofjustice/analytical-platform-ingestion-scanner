@@ -7,7 +7,14 @@ if [[ "${REMOTE_CONTAINERS}" ]] && [[ "$(uname -m)" == "aarch64" ]]; then
   echo "(⚠) Looks like you're running in a dev container on Apple Silicon."
   echo "(⚠) This script builds linux/amd64 images which might take a long time or even fail."
   export PLATFORM_FLAG="--platform linux/amd64"
+elif [[ "$(uname)" == "Darwin" ]] && [[ "$(uname -m)" == "arm64" ]]; then
+  echo "(⚠) Looks like you're running on Apple Silicon."
+  echo "(⚠) This script builds linux/amd64 images which might take a long time or even fail."
+  export PLATFORM_FLAG="--platform linux/amd64"
+else
+  export PLATFORM_FLAG=""
 fi
+
 # shellcheck disable=SC2086
 # special case for PLATFORM_FLAG as it can't parse double quotes
 docker build ${PLATFORM_FLAG} --file Dockerfile --tag "${IMAGE_TAG}" .
