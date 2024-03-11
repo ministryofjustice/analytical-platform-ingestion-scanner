@@ -44,9 +44,12 @@ def definition_upload():
             raise ValueError(
                 "CLAMAV_DEFINITON_BUCKET_NAME environment variable not set."
             )
-        s3_client.upload_file('/tmp/clamav/clamav.tar.gz', bucket_name, 'clamav.tar.gz')
+        s3_client.upload_file(
+            "/tmp/clamav/clamav.tar.gz", bucket_name, "clamav.tar.gz"
+        )
     except botocore.exceptions.ClientError as e:
         print(f"Failed to upload ClamAV definitions: {e}")
+
 
 def definition_download():
     try:
@@ -59,14 +62,16 @@ def definition_download():
             raise ValueError(
                 "CLAMAV_DEFINITON_BUCKET_NAME environment variable not set."
             )
-        s3_client.download_file(bucket_name, "clamav.tar.gz", "/tmp/clamav/clamav.tar.gz")
+        s3_client.download_file(
+            bucket_name, "clamav.tar.gz", "/tmp/clamav/clamav.tar.gz"
+        )
         print("Successfully downloaded ClamAV definitions from S3.")
 
 
         # Extract the definitions
         run_command(
-            'tar --extract --gzip --verbose --file=/tmp/clamav/clamav.tar.gz -C /tmp/clamav/database'
-            )
+            "tar --extract --gzip --verbose --file=/tmp/clamav/clamav.tar.gz -C /tmp/clamav/database"
+        )
         print("Successfully extracted ClamAV definitions.")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to download or extract ClamAV definitions: {e}")
