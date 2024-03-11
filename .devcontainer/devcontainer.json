@@ -2,16 +2,16 @@
   "name": "analytical-platform-ingestion-scanner",
   "image": "ghcr.io/ministryofjustice/devcontainer-base:latest",
   "features": {
-    "ghcr.io/devcontainers/features/docker-in-docker:2": {
-      "dockerDashComposeVersion": "none"
-    }
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {}
   },
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
     "vscode": {
       "extensions": [
         "EditorConfig.EditorConfig",
         "GitHub.vscode-github-actions",
-        "GitHub.vscode-pull-request-github"
+        "GitHub.vscode-pull-request-github",
+        "ms-python.python"
       ]
     }
   }
