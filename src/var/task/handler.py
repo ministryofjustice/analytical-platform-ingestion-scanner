@@ -175,7 +175,7 @@ def handler(event, context):
             raise ValueError(f"Invalid mode: {mode}")
     except Exception as e:
         print(f"Error: {e}")
-        return { "statusCode": 500, "body": json.dumps({"message": "Error occurred"})}
+        return {"statusCode": 500, "body": json.dumps({"message": "Error occurred"})}
     return {
         "statusCode": 200,
         "body": json.dumps({"message": "Operation completed successfully"}),
