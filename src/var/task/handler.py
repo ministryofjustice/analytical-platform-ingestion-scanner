@@ -173,9 +173,17 @@ def handler(event, context):  # pylint: disable=unused-argument
             scan(event)
         else:
             raise ValueError(f"Invalid mode: {mode}")
-    except Exception as e:
-        print(f"Error: {e}")
-        return {"statusCode": 500, "body": json.dumps({"message": "Error occurred"})}
+    except ValueError as e:
+        print(f"Configuration Error: {e}")
+        return {"statusCode": 400, "body": json.dumps({"message": str(e)})}
+    except botocore.exceptions.ClientError as e:
+        print(f"AWS Client Error: {e}")
+        return {"statusCode": 500, "body": json.dumps({"message": "AWS service error"})}
+    except Exception as e:  # pylint: disable=broad-except
+        print(f"Unexpected Error: {type(e).__name__}, {e}")
+        # import traceback
+        # traceback.print_exc()
+        return {"statusCode": 500, "body": json.dumps({"message": "An unexpected error occurred"})}
     return {
         "statusCode": 200,
         "body": json.dumps({"message": "Operation completed successfully"}),
