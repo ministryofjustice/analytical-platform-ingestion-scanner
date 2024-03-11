@@ -11,7 +11,12 @@
         "EditorConfig.EditorConfig",
         "GitHub.vscode-github-actions",
         "GitHub.vscode-pull-request-github",
-        "ms-python.python"
+        "ms-python.python",
+        "ms-python.pylint",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.flake8",
+        "ms-python.autopep8"
       ]
     }
   }
