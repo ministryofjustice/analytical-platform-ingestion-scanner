@@ -162,7 +162,7 @@ def move_to_quarantine(object_key):
         print(f"Failed to move file to quarantine: {e}")
 
 
-def handler(event, context):
+def handler(event):
     print("Received event:", event)
     try:
         mode = os.environ.get("MODE")
