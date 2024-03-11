@@ -4,7 +4,6 @@ import subprocess
 from datetime import datetime
 
 import boto3
-
 import botocore.exceptions
 
 s3_client = boto3.client("s3")
@@ -44,9 +43,7 @@ def definition_upload():
             raise ValueError(
                 "CLAMAV_DEFINITON_BUCKET_NAME environment variable not set."
             )
-        s3_client.upload_file(
-            "/tmp/clamav/clamav.tar.gz", bucket_name, "clamav.tar.gz"
-        )
+        s3_client.upload_file("/tmp/clamav/clamav.tar.gz", bucket_name, "clamav.tar.gz")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to upload ClamAV definitions: {e}")
 
@@ -66,7 +63,6 @@ def definition_download():
             bucket_name, "clamav.tar.gz", "/tmp/clamav/clamav.tar.gz"
         )
         print("Successfully downloaded ClamAV definitions from S3.")
-
 
         # Extract the definitions
         run_command(
@@ -124,9 +120,10 @@ def move_to_processed(object_key):
         s3_client.put_object_tagging(
             Bucket=processed_bucket_name,
             Key=object_key,
-            Tagging={"TagSet": [
-                {"Key": "scan-result", "Value": "clean"},
-                {"Key": "scan-time", "Value": datetime.now().isoformat()},
+            Tagging={
+                "TagSet": [
+                    {"Key": "scan-result", "Value": "clean"},
+                    {"Key": "scan-time", "Value": datetime.now().isoformat()},
                 ]
             },
         )
@@ -178,8 +175,7 @@ def handler(event, context):
             raise ValueError(f"Invalid mode: {mode}")
     except Exception as e:
         print(f"Error: {e}")
-        return {
-            "statusCode": 500, "body": json.dumps({"message": "Error occurred"})}
+        return { "statusCode": 500, "body": json.dumps({"message": "Error occurred"})}
     return {
         "statusCode": 200,
         "body": json.dumps({"message": "Operation completed successfully"}),
