@@ -11,7 +11,7 @@ s3_client = boto3.client("s3")
 
 def run_command(command):
     result = subprocess.run(
-        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        command, check=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     return (
         result.returncode,
@@ -162,7 +162,7 @@ def move_to_quarantine(object_key):
         print(f"Failed to move file to quarantine: {e}")
 
 
-def handler(event, context):
+def handler(event, context):  # pylint: disable=unused-argument
     print("Received event:", event)
     try:
         mode = os.environ.get("MODE")
