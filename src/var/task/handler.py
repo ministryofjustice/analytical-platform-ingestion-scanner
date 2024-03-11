@@ -181,7 +181,10 @@ def handler(event, context):  # pylint: disable=unused-argument
         return {"statusCode": 500, "body": json.dumps({"message": "AWS service error"})}
     except Exception as e:  # pylint: disable=broad-except
         print(f"Unexpected Error: {type(e).__name__}, {e}")
-        return {"statusCode": 500, "body": json.dumps({"message": "An unexpected error occurred"})}
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"message": "An unexpected error occurred"}),
+        }
     return {
         "statusCode": 200,
         "body": json.dumps({"message": "Operation completed successfully"}),
