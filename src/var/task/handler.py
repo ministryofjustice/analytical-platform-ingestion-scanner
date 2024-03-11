@@ -1,11 +1,14 @@
+import json
 import os
 import subprocess
-import boto3
-import botocore.exceptions
-import json
 from datetime import datetime
 
+import boto3
+
+import botocore.exceptions
+
 s3_client = boto3.client("s3")
+
 
 def run_command(command):
     result = subprocess.run(
@@ -16,6 +19,7 @@ def run_command(command):
         result.stdout.decode("utf-8"),
         result.stderr.decode("utf-8"),
     )
+
 
 def definition_upload():
     try:
@@ -37,7 +41,9 @@ def definition_upload():
         # Upload the definitions to S3
         bucket_name = os.environ.get("CLAMAV_DEFINITON_BUCKET_NAME")
         if not bucket_name:
-            raise ValueError("CLAMAV_DEFINITON_BUCKET_NAME environment variable not set.")
+            raise ValueError(
+                "CLAMAV_DEFINITON_BUCKET_NAME environment variable not set."
+            )
         s3_client.upload_file('/tmp/clamav/clamav.tar.gz', bucket_name, 'clamav.tar.gz')
     except botocore.exceptions.ClientError as e:
         print(f"Failed to upload ClamAV definitions: {e}")
@@ -50,11 +56,12 @@ def definition_download():
         # Download the definitions from S3
         bucket_name = os.environ.get("CLAMAV_DEFINITON_BUCKET_NAME")
         if not bucket_name:
-            raise ValueError("CLAMAV_DEFINITON_BUCKET_NAME environment variable not set.")
-        s3_client.download_file(
-            bucket_name, "clamav.tar.gz", "/tmp/clamav/clamav.tar.gz"
+            raise ValueError(
+                "CLAMAV_DEFINITON_BUCKET_NAME environment variable not set."
             )
+        s3_client.download_file(bucket_name, "clamav.tar.gz", "/tmp/clamav/clamav.tar.gz")
         print("Successfully downloaded ClamAV definitions from S3.")
+
 
         # Extract the definitions
         run_command(
@@ -63,6 +70,7 @@ def definition_download():
         print("Successfully extracted ClamAV definitions.")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to download or extract ClamAV definitions: {e}")
+
 
 def scan(event):
     # event_json = json.loads(event_data)
@@ -78,12 +86,12 @@ def scan(event):
         raise ValueError("LANDING_BUCKET_NAME environment variable not set.")
     s3_client.download_file(
         landing_bucket_name, object_key, f"/tmp/clamav/scan/{object_name}"
-        )
+    )
 
     # Scan the test file
     exit_code, stdout, _ = run_command(
         f"clamscan --database=/tmp/clamav/database /tmp/clamav/scan/{object_name}"
-        )
+    )
     print(stdout)
     if exit_code == 0:
         print("Scan result: Clean")
@@ -91,6 +99,7 @@ def scan(event):
     else:
         print("Scan result: Infected")
         move_to_quarantine(object_key)
+
 
 def move_to_processed(object_key):
     try:
@@ -110,11 +119,16 @@ def move_to_processed(object_key):
         s3_client.put_object_tagging(
             Bucket=processed_bucket_name,
             Key=object_key,
-            Tagging={"TagSet": [{"Key": "scan-result", "Value": "clean"}, {"Key": "scan-time", "Value": datetime.now().isoformat()}]}
+            Tagging={"TagSet": [
+                {"Key": "scan-result", "Value": "clean"},
+                {"Key": "scan-time", "Value": datetime.now().isoformat()},
+                ]
+            },
         )
         print("File moved to processed and tagged")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to move file to processed: {e}")
+
 
 def move_to_quarantine(object_key):
     try:
@@ -134,11 +148,17 @@ def move_to_quarantine(object_key):
         s3_client.put_object_tagging(
             Bucket=quarantine_bucket_name,
             Key=object_key,
-            Tagging={'TagSet': [{"Key": "scan-result", "Value": "infected"}, {"Key": "scan-time", "Value": datetime.now().isoformat()}]}
+            Tagging={
+                "TagSet": [
+                    {"Key": "scan-result", "Value": "infected"},
+                    {"Key": "scan-time", "Value": datetime.now().isoformat()},
+                ]
+            },
         )
         print("File moved to quarantine and tagged")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to move file to quarantine: {e}")
+
 
 def handler(event, context):
     print("Received event:", event)
@@ -154,11 +174,8 @@ def handler(event, context):
     except Exception as e:
         print(f"Error: {e}")
         return {
-            "statusCode": 500,
-            "body": json.dumps({"message": "Error occurred"})
-        }
+            "statusCode": 500, "body": json.dumps({"message": "Error occurred"})}
     return {
         "statusCode": 200,
-        "body": json.dumps({"message": "Operation completed successfully"})
+        "body": json.dumps({"message": "Operation completed successfully"}),
     }
-
