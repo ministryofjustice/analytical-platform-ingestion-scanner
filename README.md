@@ -16,7 +16,7 @@ The image comes with two key features - Syncing and Scanning.
 
 ### Scanning
 
-- `scan` _TBC_
+- `scan` pulls ingested object from landing bucket, scans with ClamAV. If clean, moves to processed bucket for upstream sync, or if infectected, move to quarantined bucket and send message to SNS.
 
 ## Running Locally
 
@@ -38,13 +38,13 @@ docker run -it --rm \
 
 ## Versions
 
-### Lambda Amazon Linux 2023
+### Lambda Image
 
 Generally Dependabot does this, but the following command will return the digest:
 
 ```bash
-docker pull --platform linux/amd64 public.ecr.aws/lambda/provided:al2023
-docker image inspect --format='{{index .RepoDigests 0}}' public.ecr.aws/lambda/provided:al2023
+docker pull --platform linux/amd64 public.ecr.aws/lambda/python:3.12
+docker image inspect --format='{{index .RepoDigests 0}}' public.ecr.aws/lambda/python:3.12
 ```
 
 ### DNF Packages
@@ -52,7 +52,7 @@ docker image inspect --format='{{index .RepoDigests 0}}' public.ecr.aws/lambda/p
 To find latest DNF package versions, you can run the following:
 
 ```bash
-docker run -it --rm --platform linux/amd64 public.ecr.aws/lambda/provided:al2023
+docker run -it --rm --platform linux/amd64 --entrypoint /bin/bash public.ecr.aws/lambda/python:3.12
 
 microdnf update
 
