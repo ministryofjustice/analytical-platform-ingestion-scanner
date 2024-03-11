@@ -32,3 +32,5 @@ jobs:
         uses: super-linter/super-linter/slim@e0fc164bba85f4b58c6cd17ba1dfd435d01e8a06 # v6.3.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: /
+          PYTHON_PYLINT_CONFIG_FILE: pyproject.toml

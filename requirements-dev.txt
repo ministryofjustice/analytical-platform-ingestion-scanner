@@ -1,3 +1,4 @@
+-r src/var/task/requirements.txt
 autopep8==2.0.4
 black==24.2.0
 flake8==7.0.0
