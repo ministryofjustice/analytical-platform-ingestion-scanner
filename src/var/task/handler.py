@@ -12,8 +12,8 @@ scan_time = datetime.now().isoformat()
 
 
 def run_command(command):
-    result = subprocess.run(
-        command, check=True, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    result = subprocess.run(  # pylint: disable=subprocess-run-check
+        command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )
     return (
         result.returncode,
@@ -164,13 +164,7 @@ def move_to_quarantine(object_key):
         print(f"Failed to move file to quarantine: {e}")
 
     try:
-        send_sns_message(
-            message={
-                "default": json.dumps(
-                    {"object-key": object_key, "scan-result": "infected", "scan-time": scan_time}
-                )
-            }
-        )
+        send_sns_message(message=f"quarantined,{object_key},{scan_time}")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to send SNS message: {e}")
 
@@ -179,7 +173,7 @@ def send_sns_message(message):
     topic_arn = os.environ.get("SNS_TOPIC_ARN")
     if not topic_arn:
         raise ValueError("SNS_TOPIC_ARN environment variable not set.")
-    sns_client.publish(TopicArn=topic_arn, Message=message, MessageStructure="json")
+    sns_client.publish(TopicArn=topic_arn, Message=message)
 
 
 def handler(event, context):  # pylint: disable=unused-argument

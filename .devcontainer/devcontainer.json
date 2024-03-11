@@ -6,7 +6,8 @@
     "ghcr.io/devcontainers/features/python:1": {
       "version": "3.12",
       "installTools": false
-    }
+    },
+    "ghcr.io/ministryofjustice/devcontainer-feature/aws:0": {}
   },
   "postCreateCommand": "bash .devcontainer/post-create.sh",
   "customizations": {
