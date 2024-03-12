@@ -1,5 +1,5 @@
 {
-  "name": "analytical-platform-ingestion-scanner",
+  "name": "analytical-platform-ingestion-scan",
   "image": "ghcr.io/ministryofjustice/devcontainer-base:latest",
   "features": {
     "ghcr.io/devcontainers/features/docker-in-docker:2": {},
