@@ -43,13 +43,13 @@ jobs:
         uses: docker/build-push-action@af5a7ed5ba88268d5278f7203fb52cd833f66d6e # v5.2.0
         with:
           push: true
-          tags: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-ingestion-scan-ecr-repo:${{ github.ref_name }}
+          tags: 374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-scan:${{ github.ref_name }}
 
       - name: Sign
         id: sign
         shell: bash
         run: |
-          cosign sign --yes 374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-ingestion-scan-ecr-repo@${{ steps.build_and_push.outputs.digest }}
+          cosign sign --yes 374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-scan@${{ steps.build_and_push.outputs.digest }}
 
       - name: Verify
         id: verify
@@ -57,4 +57,4 @@ jobs:
           cosign verify \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
             --certificate-identity=https://github.com/ministryofjustice/analytical-platform-jml-report/.github/workflows/release.yml@refs/tags/${{ github.ref_name }} \
-            374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-ingestion-scan-ecr-repo@${{ steps.build_and_push.outputs.digest }}
+            374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-scan@${{ steps.build_and_push.outputs.digest }}
