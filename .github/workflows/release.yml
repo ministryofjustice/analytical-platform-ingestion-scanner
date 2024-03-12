@@ -56,5 +56,5 @@ jobs:
         run: |
           cosign verify \
             --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
-            --certificate-identity=https://github.com/ministryofjustice/analytical-platform-jml-report/.github/workflows/release.yml@refs/tags/${{ github.ref_name }} \
+            --certificate-identity=https://github.com/ministryofjustice/analytical-platform-ingestion-scan/.github/workflows/release.yml@refs/tags/${{ github.ref_name }} \
             374269020027.dkr.ecr.eu-west-2.amazonaws.com/analytical-platform-ingestion-scan@${{ steps.build_and_push.outputs.digest }}
