@@ -16,7 +16,7 @@ The image comes with two key features - Syncing and Scanning.
 
 ### Scanning
 
-- `scan` pulls ingested object from landing bucket, scans with ClamAV. If clean, moves to processed bucket for upstream sync, or if infectected, move to quarantined bucket and send message to SNS.
+- `scan` pulls ingested object from landing bucket, scans with ClamAV. If clean, moves to processed bucket for upstream sync, or if infectected, move to quarantined bucket.
 
 ## Running Locally
 
