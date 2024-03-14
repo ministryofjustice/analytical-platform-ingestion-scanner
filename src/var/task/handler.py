@@ -7,7 +7,6 @@ import boto3
 import botocore.exceptions
 
 s3_client = boto3.client("s3")
-sns_client = boto3.client("sns")
 scan_time = datetime.now().isoformat()
 
 
@@ -162,18 +161,6 @@ def move_to_quarantine(object_key):
         print("File moved to quarantine and tagged")
     except botocore.exceptions.ClientError as e:
         print(f"Failed to move file to quarantine: {e}")
-
-    try:
-        send_sns_message(message=f"quarantined,{object_key},{scan_time}")
-    except botocore.exceptions.ClientError as e:
-        print(f"Failed to send SNS message: {e}")
-
-
-def send_sns_message(message):
-    topic_arn = os.environ.get("SNS_TOPIC_ARN")
-    if not topic_arn:
-        raise ValueError("SNS_TOPIC_ARN environment variable not set.")
-    sns_client.publish(TopicArn=topic_arn, Message=message)
 
 
 def handler(event, context):  # pylint: disable=unused-argument
