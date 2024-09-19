@@ -10,9 +10,9 @@ LABEL org.opencontainers.image.vendor="Ministry of Justice" \
 
 RUN microdnf update \
     && microdnf install --assumeyes \
-         clamav-0.103.9-1.amzn2023.0.2.x86_64 \
-         clamav-update-0.103.9-1.amzn2023.0.2.x86_64 \
-         clamd-0.103.9-1.amzn2023.0.2.x86_64 \
+         clamav-0.103.11-1.amzn2023.0.1.x86_64 \
+         clamav-update-0.103.11-1.amzn2023.0.1.x86_64 \
+         clamd-0.103.11-1.amzn2023.0.1.x86_64 \
          tar-2:1.34-1.amzn2023.0.4.x86_64 \
     && microdnf clean all
 
