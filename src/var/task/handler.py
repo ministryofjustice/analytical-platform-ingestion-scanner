@@ -150,7 +150,6 @@ def move_to_quarantine(object_key):
             object_key=object_key,
             scan_result="infected",
         )
-
         print("File moved to quarantine and tagged")
 
     except botocore.exceptions.ClientError as e:
@@ -163,7 +162,7 @@ def update_tags(
     scan_result: str,
 ) -> None:
     """Add tags for result of file scan to onject.
-    
+
     This will append two new tags on top of any existing object tags:
     * scan-time
     * scan
@@ -174,25 +173,24 @@ def update_tags(
     # Retrieve existing tags for the object.
     response = s3_client.get_object_tagging(
         Bucket=bucket_name,
-        Key=object_key
+        Key=object_key,
     )
-    tags = response.get('TagSet', [])
+    tags = response.get("TagSet", [])
 
     additional_tags = {
-        'scan-result': scan_result,
-        'scan-time': scan_time,
+        "scan-result": scan_result,
+        "scan-time": scan_time,
     }
 
     # Merge existing tags with additional tags.
-    tags.extend([
-        {'Key': key, 'Value': value}
-        for key, value in additional_tags.items()
-    ])
+    tags.extend(
+        [{"Key": key, "Value": value} for key, value in additional_tags.items()]
+    )
 
     s3_client.put_object_tagging(
         Bucket=bucket_name,
         Key=object_key,
-        Tagging={'TagSet': tags}
+        Tagging={"TagSet": tags},
     )
 
 
