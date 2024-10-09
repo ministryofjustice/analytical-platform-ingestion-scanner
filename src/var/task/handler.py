@@ -118,17 +118,14 @@ def move_to_processed(object_key):
         )
 
         # Tag the file with the scan result
-        s3_client.put_object_tagging(
-            Bucket=processed_bucket_name,
-            Key=object_key,
-            Tagging={
-                "TagSet": [
-                    {"Key": "scan-result", "Value": "clean"},
-                    {"Key": "scan-time", "Value": scan_time},
-                ]
-            },
+        update_tags(
+            bucket_name=processed_bucket_name,
+            object_key=object_key,
+            scan_result="clean",
         )
+
         print("File moved to processed and tagged")
+
     except botocore.exceptions.ClientError as e:
         print(f"Failed to move file to processed: {e}")
 
@@ -148,19 +145,55 @@ def move_to_quarantine(object_key):
         )
 
         # Tag the file with the scan result
-        s3_client.put_object_tagging(
-            Bucket=quarantine_bucket_name,
-            Key=object_key,
-            Tagging={
-                "TagSet": [
-                    {"Key": "scan-result", "Value": "infected"},
-                    {"Key": "scan-time", "Value": scan_time},
-                ]
-            },
+        update_tags(
+            bucket_name=quarantine_bucket_name,
+            object_key=object_key,
+            scan_result="infected",
         )
+
         print("File moved to quarantine and tagged")
+
     except botocore.exceptions.ClientError as e:
         print(f"Failed to move file to quarantine: {e}")
+
+
+def update_tags(
+    bucket_name: str,
+    object_key: str,
+    scan_result: str,
+) -> None:
+    """Add tags for result of file scan to onject.
+    
+    This will append two new tags on top of any existing object tags:
+    * scan-time
+    * scan
+
+    Note, if any tags are present with the same name, this will not overwrite
+    the tag with the same name, it will attempt to add the tag twice.
+    """
+    # Retrieve existing tags for the object.
+    response = s3_client.get_object_tagging(
+        Bucket=bucket_name,
+        Key=object_key
+    )
+    tags = response.get('TagSet', [])
+
+    additional_tags = {
+        'scan-result': scan_result,
+        'scan-time': scan_time,
+    }
+
+    # Merge existing tags with additional tags.
+    tags.extend([
+        {'Key': key, 'Value': value}
+        for key, value in additional_tags.items()
+    ])
+
+    s3_client.put_object_tagging(
+        Bucket=bucket_name,
+        Key=object_key,
+        Tagging={'TagSet': tags}
+    )
 
 
 def handler(event, context):  # pylint: disable=unused-argument
