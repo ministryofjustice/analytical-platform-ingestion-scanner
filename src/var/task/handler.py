@@ -165,7 +165,7 @@ def update_tags(
 
     This will append two new tags on top of any existing object tags:
     * scan-time
-    * scan
+    * scan-result
 
     Note, if any tags are present with the same name, this will not overwrite
     the tag with the same name, it will attempt to add the tag twice.
