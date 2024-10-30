@@ -2,6 +2,7 @@ import json
 import os
 import subprocess
 from datetime import datetime
+from urllib.parse import unquote_plus
 
 import boto3
 import botocore.exceptions
@@ -77,6 +78,17 @@ def definition_download():
 def scan(event):
     # event_json = json.loads(event_data)
     object_key = event["Records"][0]["s3"]["object"]["key"]
+
+    # AWS s3 event notifications don't handle spaces (and other characters) as
+    # they appear in s3. Using unquote_plus converts back to the original
+    # name as in s3.
+    #
+    # https://docs.aws.amazon.com/AmazonS3/latest/userguide/notification-content-structure.html
+    # The s3 key provides information about the bucket and object involved
+    # in the event. The object key name value is URL encoded. For example,
+    # "red flower.jpg" becomes "red+flower.jpg".
+    object_key = unquote_plus(object_key)
+
     object_name = object_key.split("/")[-1]
 
     # Create the directory for running the scan
