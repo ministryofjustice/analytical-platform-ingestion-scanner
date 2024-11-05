@@ -58,3 +58,7 @@ microdnf update
 
 microdnf repoquery ${PACKAGE} # for example clamav, clamav-update or clamd
 ```
+
+## Maintenance
+
+For maintenance deatails and steps see [here](https://docs.analytical-platform.service.justice.gov.uk/documentation/runbooks/001-ingestion-maintenance.html#ingestion-maintenance)
