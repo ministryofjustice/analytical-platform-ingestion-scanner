@@ -61,4 +61,4 @@ microdnf repoquery ${PACKAGE} # for example clamav, clamav-update or clamd
 
 ## Maintenance
 
-For maintenance deatails and steps see [here](https://github.com/ministryofjustice/analytical-platform/issues/5902)
+This component is maintained and patched using an automated process which generates a ticket on the first of the month like the [following](https://github.com/ministryofjustice/analytical-platform/issues/5902).
