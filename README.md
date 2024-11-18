@@ -58,3 +58,7 @@ microdnf update
 
 microdnf repoquery ${PACKAGE} # for example clamav, clamav-update or clamd
 ```
+
+## Maintenance
+
+Maintenance of this component is scheduled in this [workflow](https://github.com/ministryofjustice/analytical-platform/blob/main/.github/workflows/schedule-issue-ingestion.yml), which generates a maintenance ticket as per this [example](https://github.com/ministryofjustice/analytical-platform/issues/5902).
